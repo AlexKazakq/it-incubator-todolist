@@ -8,6 +8,7 @@ function App() {
         tasks1 = [
             {id: 1, title: "HTML&CSS", isDone: true, newValue: true},
             {id: 2, title: "JS", isDone: true, newValue: true},
+            {id: 3, title: "ReactJS", isDone: false, newValue: true},
             {id: 3, title: "ReactJS", isDone: false, newValue: true}
         ],
         tasks2 = [
