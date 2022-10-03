@@ -16,6 +16,9 @@ function App() {
         ]
     );
 
+    const changeIsDone = (newId: string, newIsDone: boolean) => {
+        setTasks(tasks.map(el => el.id === newId ? {...el, isDone: newIsDone} : el))
+    }
 
     const addTask = (newTitle: string) => {
         const newTask = {id: v1(), title: newTitle, isDone: false};
@@ -50,6 +53,7 @@ function App() {
                 removeTask={removeTask}
                 changeFilter={changeFilter}
                 addTask={addTask}
+                changeIsDone={changeIsDone}
             />
         </div>
     );

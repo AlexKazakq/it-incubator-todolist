@@ -1,4 +1,5 @@
 import React from "react";
+import styles from './../../Todolist.module.css'
 
 type PropsType = {
     name: string,
@@ -11,6 +12,6 @@ export const Button = (props: PropsType) => {
         props.callBack();
     }
     return (
-        <button onClick={onClickHandler}></button>
+        <button className={styles.activeFilter} onClick={onClickHandler}>{props.name}</button>
     )
 }
