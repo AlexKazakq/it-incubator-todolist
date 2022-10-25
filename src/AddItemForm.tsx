@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import {AddToPhotosTwoTone} from "@mui/icons-material";
 
 
 type AddItemFormPropsType = {
@@ -13,7 +15,7 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
         error && setError(false)
         setTitle(e.currentTarget.value)
     }
-    const onEnterDownAddItem = (e: KeyboardEvent<HTMLInputElement>)=> e.key === "Enter" && addTodolist()
+    const onEnterDownAddItem = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && addTodolist()
 
     const errorMessage = error
         ? <div style={{fontWeight: "bold", color: "hotpink"}}>Title is required!</div>
@@ -21,7 +23,7 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
 
     const addTodolist = () => {
         const trimmedTitle = title.trim()
-        if(trimmedTitle !== ""){
+        if (trimmedTitle !== "") {
             props.addItem(trimmedTitle)
         } else {
             setError(true)
@@ -31,15 +33,21 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
 
     return (
         <div>
-            <input
+            <TextField
+                variant={"outlined"}
                 value={title}
                 onChange={onChangeSetLocalTitle}
                 onKeyDown={onEnterDownAddItem}
-                className={error ? "error" : ""}
-
+                label={"Title"}
+                size={'small'}
+                error={error}
+                helperText={error && 'Title is required!'}
             />
-            <button onClick={addTodolist}>+</button>
-            {errorMessage}
+
+            <IconButton onClick={addTodolist} color={"primary"} size={"small"}>
+                <AddToPhotosTwoTone/>
+            </IconButton>
+            {/*{errorMessage}*/}
         </div>
     );
 };
