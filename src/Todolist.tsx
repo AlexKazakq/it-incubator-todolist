@@ -1,7 +1,9 @@
-import React, { ChangeEvent} from 'react';
+import React, {ChangeEvent} from "react";
 import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import {Button, ButtonGroup, Checkbox, IconButton, List, ListItem, Typography} from "@mui/material";
+import {DeleteForever, DeleteSweepTwoTone} from "@mui/icons-material";
 //rsc
 type TodoListPropsType = {
     todoListId: string
@@ -26,26 +28,35 @@ export type TaskType = {
 
 const TodoList = (props: TodoListPropsType) => {
 
-    const getTasksListItem = (t: TaskType )=> {
+    const getTasksListItem = (t: TaskType) => {
         const removeTask = () => props.removeTask(t.id, props.todoListId)
-        const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>)=>props.changeTaskStatus(t.id, e.currentTarget.checked, props.todoListId)
+        const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(t.id, e.currentTarget.checked, props.todoListId)
         const changeTaskTitle = (title: string) => {
             props.changeTaskTitle(t.id, title, props.todoListId)
         }
         return (
-            <li key={t.id} className={t.isDone ? "isDone" : "notIsDone"}>
-                <input
+            <ListItem
+                key={t.id}
+                className={t.isDone ? "isDone" : "notIsDone"}
+                style={{
+                    padding: "0px",
+                    justifyContent: "space-between",
+                    textDecoration: t.isDone ? "line-through" : "none"
+                }}
+            >
+                <Checkbox
                     onChange={changeTaskStatus}
-                    type={"checkbox"}
                     checked={t.isDone}
-                />
-               <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
-                <button onClick={removeTask}>x</button>
-            </li>
+                    size={"small"}/>
+                <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
+                <IconButton size={"small"} onClick={removeTask}>
+                    <DeleteSweepTwoTone/>
+                </IconButton>
+            </ListItem>
         )
     }
     const tasksList = props.tasks.length
-        ? <ul>{props.tasks.map(getTasksListItem)}</ul>
+        ? <List>{props.tasks.map(getTasksListItem)}</List>
         : <span>Your taskslist is empty :(</span>
 
     const addTask = (title: string) => {
@@ -62,25 +73,37 @@ const TodoList = (props: TodoListPropsType) => {
     }
     return (
         <div>
-            <h3>
+            <Typography variant={"h5"} align={"center"} style={{fontWeight: "bold", marginBottom: '20px'}}>
                 <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
-                <button onClick={removeTodoListHandler}>X</button>
-            </h3>
+                <IconButton size={"small"} onClick={removeTodoListHandler} color={"secondary"}>
+                    <DeleteForever/>
+                </IconButton>
+            </Typography>
             <AddItemForm addItem={addTask}/>
-                {tasksList}
+            {tasksList}
             <div>
-                <button
-                    className={props.filter === "all" ? "active-btn btn": "btn"}
-                    onClick={handlerCreator("all")}
-                >All</button>
-                <button
-                    className={props.filter === "active" ? "active-btn btn": "btn"}
-                    onClick={handlerCreator("active")}
-                >Active</button>
-                <button
-                    className={props.filter === "completed" ? "active-btn": "btn"}
-                    onClick={handlerCreator("completed")}
-                >Completed</button>
+                <ButtonGroup
+                    size={"small"}
+                    variant="contained"
+                    aria-label="outlined primary button group"
+                    fullWidth
+                >
+                    <Button
+                        style={{marginRight: "1px", fontSize: '11px'}}
+                        color={props.filter === "all" ? "secondary" : "primary"}
+                        onClick={handlerCreator("all")}
+                    >All</Button>
+                    <Button
+                        style={{marginRight: "1px", fontSize: '11px'}}
+                        color={props.filter === "active" ? "secondary" : "primary"}
+                        onClick={handlerCreator("active")}
+                    >Active</Button>
+                    <Button
+                        style={{fontSize: '11px'}}
+                        color={props.filter === "completed" ? "secondary" : "primary"}
+                        onClick={handlerCreator("completed")}
+                    >Completed</Button>
+                </ButtonGroup>
             </div>
         </div>
     );
