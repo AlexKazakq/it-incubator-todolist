@@ -1,7 +1,6 @@
-import React, {Reducer, useReducer} from "react";
+import React, { useCallback} from "react";
 import "./App.css";
-import TodoList, {TaskType} from "./TodoList";
-import {v1} from "uuid";
+import {TaskType, TodoList} from "./TodoList";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
@@ -9,21 +8,17 @@ import {
     addTodolistAC,
     changeTodoListFilterAC,
     changeTodoListTitleAC,
-    removeTodoListAC, TodolistActionType,
-    todolistsReducer
+    removeTodoListAC
 } from "./store/todolist-reducer";
 import {
     addTaskAC,
     changeTaskStatusAC,
     changeTaskTitleAC,
-    removeTaskAC,
-    TasksActionType,
-    tasksReducer
+    removeTaskAC
 } from "./store/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store/store";
 import {Dispatch} from "redux";
-import TodoListWithRedux from "./store/TodoListWithRedux";
 
 //data -> CRUD
 //create +
@@ -54,33 +49,33 @@ function AppWithRedux() {
 
     const dispatch = useDispatch<Dispatch>()
 
-    const removeTask = (taskId: string, todoListId: string) => {
+    const removeTask = useCallback((taskId: string, todoListId: string) => {
         dispatch(removeTaskAC(taskId, todoListId))
-    }
-    const addTask = (title: string, todoListId: string) => {
+    }, [dispatch])
+    const addTask = useCallback((title: string, todoListId: string) => {
         dispatch(addTaskAC(title, todoListId))
-    }
-    const changeTaskStatus = (taskId: string, newTaskStatus: boolean, todoListId: string) => {
+    }, [dispatch])
+    const changeTaskStatus = useCallback((taskId: string, newTaskStatus: boolean, todoListId: string) => {
         dispatch(changeTaskStatusAC(taskId, newTaskStatus, todoListId))
-    }
+    }, [dispatch])
 
-    const changeTaskTitle = (taskId: string, title: string, todoListId: string) => {
+    const changeTaskTitle = useCallback((taskId: string, title: string, todoListId: string) => {
         dispatch(changeTaskTitleAC(taskId, title, todoListId))
-    }
+    }, [dispatch])
 
-    const changeTodoListFilter = (filter: FilterValuesType, todoListId: string) => {
+    const changeTodoListFilter = useCallback((filter: FilterValuesType, todoListId: string) => {
         dispatch(changeTodoListFilterAC(filter, todoListId))
 
-    }
-    const changeTodoListTitle = (title: string, todoListId: string) => {
+    }, [dispatch])
+    const changeTodoListTitle = useCallback((title: string, todoListId: string) => {
         dispatch(changeTodoListTitleAC(title, todoListId))
-    }
-    const removeTodoList = (todoListId: string) => {
+    }, [dispatch])
+    const removeTodoList = useCallback((todoListId: string) => {
         dispatch(removeTodoListAC(todoListId))
-    }
-    const addTodoList = (title: string) => {
+    }, [dispatch])
+    const addTodoList = useCallback((title: string)  => {
         dispatch(addTodolistAC(title))
-    }
+    }, [dispatch])
 
     //GUI:
     const getFilteredTasks = (t: Array<TaskType>, f: FilterValuesType) => {
@@ -100,7 +95,20 @@ function AppWithRedux() {
                 <Paper style={{width: "300px", padding: "20px"}}
                        elevation={8}
                 >
-                    <TodoListWithRedux todolist={tl}/>
+                    <TodoList
+                        title={tl.title}
+                        filter={tl.filter}
+                        todoListId={tl.id}
+                        tasks={tasks[tl.id]}
+
+                        addTask={addTask}
+                        removeTask={removeTask}
+                        removeTodoList={removeTodoList}
+                        changeTaskTitle={changeTaskTitle}
+                        changeTaskStatus={changeTaskStatus}
+                        changeTodoListTitle={changeTodoListTitle}
+                        changeTodoListFilter={changeTodoListFilter}
+                    />
                 </Paper>
             </Grid>
         )
